@@ -1,6 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
   const messages = document.getElementById("mensajes");
-  console.log('ASDASDASDASDA');
 
   if(typeof(EventSource) !== "undefined") {
     var source = new EventSource("https://8003-misw4406-tutorial9bff-cgv6a3r2t9h.ws-eu86.gitpod.io/stream");
