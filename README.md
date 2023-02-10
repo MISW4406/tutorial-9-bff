@@ -192,6 +192,13 @@ Desde el directorio `src` ejecute el siguiente comando
 uvicorn integracion_gds.main:app --host localhost --port 8002 --reload
 ```
 
+## BFF: Web
+
+Desde el directorio `src` ejecute el siguiente comando
+
+```bash
+uvicorn bff_web.main:app --host localhost --port 8003 --reload
+```
 
 ## CDC & Debezium
 

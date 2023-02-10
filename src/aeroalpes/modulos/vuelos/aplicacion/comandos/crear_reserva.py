@@ -9,6 +9,8 @@ from aeroalpes.seedwork.infraestructura.uow import UnidadTrabajoPuerto
 from aeroalpes.modulos.vuelos.aplicacion.mapeadores import MapeadorReserva
 from aeroalpes.modulos.vuelos.infraestructura.repositorios import RepositorioReservas, RepositorioEventosReservas
 
+from pydispatch import dispatcher
+
 @dataclass
 class CrearReserva(Comando):
     fecha_creacion: str
@@ -32,8 +34,18 @@ class CrearReservaHandler(CrearReservaBaseHandler):
         repositorio = self.fabrica_repositorio.crear_objeto(RepositorioReservas)
         repositorio_eventos = self.fabrica_repositorio.crear_objeto(RepositorioEventosReservas)
 
-        UnidadTrabajoPuerto.registrar_batch(repositorio.agregar, reserva, repositorio_eventos_func=repositorio_eventos.agregar)
-        UnidadTrabajoPuerto.commit()
+        from aeroalpes.config.db import db
+
+        # TODO Debido al uso de multi-thread el uso de sesiones Flask no es permitido. ¿Como cree que podría implementarse
+        # una UnidadDeTrabajo en este caso?
+        #UnidadTrabajoPuerto.registrar_batch(repositorio.agregar, reserva, repositorio_eventos_func=repositorio_eventos.agregar)
+        #UnidadTrabajoPuerto.commit()
+        repositorio.agregar(reserva)
+
+        for evento in reserva.eventos:
+            dispatcher.send(signal=f'{type(evento).__name__}Integracion', evento=evento)
+            
+        db.session.commit()
 
 
 @comando.register(CrearReserva)
