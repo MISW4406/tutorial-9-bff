@@ -4,6 +4,8 @@ import time
 import traceback
 import uvicorn
 import uuid
+import datetime
+
 
 from pydantic import BaseSettings
 from typing import Any
@@ -12,6 +14,7 @@ from .consumidores import suscribirse_a_topico
 from .despachadores import Despachador
 
 from . import utils
+from .api.v1.router import router as v1
 
 from sse_starlette.sse import EventSourceResponse
 
@@ -43,7 +46,7 @@ async def prueba_revertir_pago() -> dict[str, str]:
     payload = dict(
         id_usuario = "1",
         id_correlacion = "1",
-        fecha_creacion = 8765432
+        fecha_creacion = utils.time_millis()
     )
     comando = dict(
         id = str(uuid.uuid4()),
@@ -52,7 +55,7 @@ async def prueba_revertir_pago() -> dict[str, str]:
         type = "ComandoReserva",
         ingestion=utils.time_millis(),
         datacontenttype="AVRO",
-        service_name = "BFF-Web",
+        service_name = "BFF Web",
         data = payload
     )
     despachador = Despachador()
@@ -78,3 +81,6 @@ async def stream_mensajes(request: Request):
             await asyncio.sleep(0.1)
 
     return EventSourceResponse(leer_eventos())
+
+
+app.include_router(v1, prefix="/v1")

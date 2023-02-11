@@ -167,22 +167,22 @@ services:
       - PULSAR_ADDRESS=broker
     networks:
       - pulsar
-  # Servicio UI
-  ui:
-    container_name: ui
-    hostname: ui
-    image: aeroalpes/ui 
-    profiles: ["aeroalpes", "ui"]
+  # Servicio BFF
+  bff:
+    container_name: bff
+    hostname: bff
+    image: aeroalpes/bff 
+    profiles: ["aeroalpes", "bff"]
     depends_on:
       - aeroalpes
       - broker
     environment:
       - AEROALPES_ADDRESS=aeroalpes
-      - PULSAR_ADDRESS=broker
+      - BROKER_HOST=broker
     networks:
       - pulsar
     ports:
-      - "5678:5678"
+      - "8003:8003"
   # Servicio Cliente
   cliente:
     container_name: cliente
