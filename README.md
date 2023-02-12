@@ -1,20 +1,19 @@
-# Tutorial 8 - Sagas
+# Tutorial 9 - Backend for Frontends (BFFs)
 
-Repositorio con código base para la implementación del patrón Saga usando orquestación como mecanismo de coordinación.
+Repositorio con código base para la implementación de un Backend for Frontend (BFF) usando GraphQL como lenguaje de consulta.
 
-Este repositorio está basado en el repositorio de Event Sourcing visto en el tutorial 7 del curso. Por tal motivo, puede usar ese mismo repositorio para entender algunos detalles que este README no cubre.
+Este repositorio está basado en el repositorio de Sagas visto en el tutorial 8 del curso. Por tal motivo, puede usar ese mismo repositorio para entender algunos detalles que este README no cubre.
 
 ## Estructura del proyecto
 
-Este repositorio sigue en general la misma estructura del repositorio de origen. Sin embargo, la estructura de nuestro proyecto de AeroAlpes ha cambiado considerablemente, puesto que se ha desmantelado el monolito en multiples microservicios. A continuación puede ver la nueva estructura:
+Este repositorio sigue en general la misma estructura del repositorio de origen. Sin embargo, cuenta con unos ligeros cambios en especial en la estructura del módulo `ui` y el nuevo servicio `bff`:
 
-- El directorio **src/cliente/** ahora incluye todas las clases y archivos que constituyen el contexto del manejo de usuarios.
-- El directorio **src/integracion_gds/** ahora incluye todas las clases y archivos que constituyen el contexto con la integración con GDS.
-- El directorio **src/pagos/** ahora incluye todas las clases y archivos que constituyen el contexto de pagos.
-- El proyecto `aeroalpes` ahora cuenta con un nuevo módulo para el manejo de sagas **src/aeroalpes/modulos/sagas/**. Este módulo sigue los mismos estándares de los demás módulos.
-    - Módulo `aplicacion` que cuenta con código de los `comandos` para múltiples contextos fuera del de reservas e itinerarios.
-    - Módulo `coordinadores` que cuenta con la saga de reservas usando orquestación.
-- Los archivos **src/aeroalpes/seedwork/aplicacion/sagas.py** provee las interfaces y definiciones genéricas para la coordinación de sagas.
+- El directorio **src/bff_web/** incluye el código del BFF Web. Este servicio cuenta con la siguiente estructura:
+    - **consumidores**: Código con la lógica para leer y procesar eventos del broker de eventos.
+    - **despachadores**: Código con la lógica para publicar comandos al broker de eventos.
+    - **main**: Archivo con la lógica de despliegue y configuración del servidor.
+    - **api**: Módulo con la diferentes versiones del API, routers, esquemas, mutaciones y consultas.
+- El directorio **src/ui/** cuenta ahora solo con código HTML, estilos CSS y JS. 
 
 ## AeroAlpes
 ### Ejecutar Base de datos
@@ -143,31 +142,6 @@ Desde el directorio principal ejecute el siguiente comando.
 docker run aeroalpes/notificacion
 ```
 
-## UI Websocket Server
-### Ejecutar Aplicación
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-python src/ui/main.py
-```
-
-### Crear imagen Docker
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-docker build . -f ui.Dockerfile -t aeroalpes/ui
-```
-
-### Ejecutar contenedora (sin compose)
-
-Desde el directorio principal ejecute el siguiente comando.
-
-```bash
-docker run aeroalpes/ui
-```
-
 ## Microservicio: Clientes
 
 Desde el directorio `src` ejecute el siguiente comando
@@ -198,6 +172,22 @@ Desde el directorio `src` ejecute el siguiente comando
 
 ```bash
 uvicorn bff_web.main:app --host localhost --port 8003 --reload
+```
+
+### Crear imagen Docker
+
+Desde el directorio principal ejecute el siguiente comando.
+
+```bash
+docker build . -f ui.Dockerfile -t aeroalpes/bff
+```
+
+### Ejecutar contenedora (sin compose)
+
+Desde el directorio principal ejecute el siguiente comando.
+
+```bash
+docker run aeroalpes/bff
 ```
 
 ## CDC & Debezium

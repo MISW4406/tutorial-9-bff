@@ -8,6 +8,7 @@ from flask import Response
 from aeroalpes.modulos.vuelos.aplicacion.mapeadores import MapeadorReservaDTOJson
 from aeroalpes.modulos.vuelos.aplicacion.comandos.crear_reserva import CrearReserva
 from aeroalpes.modulos.vuelos.aplicacion.queries.obtener_reserva import ObtenerReserva
+from aeroalpes.modulos.vuelos.aplicacion.queries.obtener_todas_reservas import ObtenerTodasReservas
 from aeroalpes.seedwork.aplicacion.comandos import ejecutar_commando
 from aeroalpes.seedwork.aplicacion.queries import ejecutar_query
 
@@ -38,10 +39,16 @@ def reservar_usando_comando():
 @bp.route('/reserva', methods=('GET',))
 @bp.route('/reserva/<id>', methods=('GET',))
 def dar_reserva_usando_query(id=None):
+    map_reserva = MapeadorReservaDTOJson()
+
     if id:
         query_resultado = ejecutar_query(ObtenerReserva(id))
-        map_reserva = MapeadorReservaDTOJson()
-        
         return map_reserva.dto_a_externo(query_resultado.resultado)
     else:
-        return [{'message': 'GET!'}]
+        query_resultado = ejecutar_query(ObtenerTodasReservas())
+        resultados = []
+        
+        for reserva in query_resultado.resultado:
+            resultados.append(map_reserva.dto_a_externo(reserva))
+        
+        return resultados

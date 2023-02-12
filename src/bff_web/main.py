@@ -41,28 +41,6 @@ def shutdown_event():
     for task in tasks:
         task.cancel()
 
-@app.get("/prueba-revertir-pago", include_in_schema=False)
-async def prueba_revertir_pago() -> dict[str, str]:
-    payload = dict(
-        id_usuario = "1",
-        id_correlacion = "1",
-        fecha_creacion = utils.time_millis()
-    )
-    comando = dict(
-        id = str(uuid.uuid4()),
-        time=utils.time_millis(),
-        specversion = "v1",
-        type = "ComandoReserva",
-        ingestion=utils.time_millis(),
-        datacontenttype="AVRO",
-        service_name = "BFF Web",
-        data = payload
-    )
-    despachador = Despachador()
-    despachador.publicar_mensaje(comando, "comando-crear-reserva", "public/default/comando-crear-reserva")
-    return {"status": "ok"}
-
-
 @app.get('/stream')
 async def stream_mensajes(request: Request):
     def nuevo_evento():

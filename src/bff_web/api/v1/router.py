@@ -1,4 +1,9 @@
 from strawberry.fastapi import GraphQLRouter
-from .esquema import schema
+from .consultas import Query
+from .mutaciones import Mutation
 
+import strawberry
+
+
+schema = strawberry.Schema(query=Query, mutation=Mutation)
 router = GraphQLRouter(schema)
