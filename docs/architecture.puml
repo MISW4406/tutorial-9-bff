@@ -108,12 +108,12 @@ package "src" {
         con los GDS.
     end note
     
-    package "bff" as bff_pkg {
+    package "bff_web" as bff_web_pkg {
         package "api" as api_pkg {
             package "v1"
         }
     }
-    note bottom of bff_pkg
+    note bottom of bff_web_pkg
         Backend For Frontend.
     end note
     
