@@ -2,7 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 import os
 
-db = None
+db = SQLAlchemy()
 
 DB_USERNAME = os.getenv('DB_USERNAME', default="root")
 DB_PASSWORD = os.getenv('DB_PASSWORD', default="adminadmin")
@@ -25,5 +25,5 @@ def database_connection(config, basedir=os.path.abspath(os.path.dirname(__file__
 
 
 def init_db(app: Flask):
-    global db 
-    db = SQLAlchemy(app)
+    db.init_app(app)
+    
