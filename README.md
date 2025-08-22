@@ -1,5 +1,7 @@
 # Tutorial 9 - Backend for Frontends (BFFs)
 
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&repo=MISW4406/tutorial-9-bff) 
+
 Repositorio con código base para la implementación de un Backend for Frontend (BFF) usando GraphQL como lenguaje de consulta.
 
 Este repositorio está basado en el repositorio de Sagas visto en el tutorial 8 del curso. Por tal motivo, puede usar ese mismo repositorio para entender algunos detalles que este README no cubre.
